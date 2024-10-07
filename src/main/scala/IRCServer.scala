@@ -1,4 +1,4 @@
-import java.io.{BufferedReader, BufferedWriter, InputStreamReader, OutputStreamWriter, PrintWriter}
+import java.io.{BufferedReader, InputStreamReader, PrintWriter}
 import java.net.{ServerSocket, Socket}
 import scala.collection.mutable
 import scala.util.control.Breaks.break
@@ -32,7 +32,7 @@ object IRCServer {
         out.println("Please write your nickname")
         nickname = in.readLine();
         clients += (nickname -> out)
-        broadcast(s"$nickname joined to chat!", out)
+        broadcast(s"$nickname joined to chat!")
 
         var message: String = ""
 
@@ -40,7 +40,7 @@ object IRCServer {
           if(message == "/quit") {
             break
           } else {
-            broadcast(message, out)
+            broadcast(message)
           }
         }
       } catch {
@@ -49,13 +49,13 @@ object IRCServer {
       } finally {
         clients-= nickname
         in.close()
-        broadcast(s"$nickname has leaved chat", out)
+        broadcast(s"$nickname has leaved chat")
         out.close()
         clientSocket.close()
       }
     }
 
-    private def broadcast(message: String, writer: PrintWriter) : Unit= {
+    private def broadcast(message: String) : Unit= {
       clients.values.foreach(writer => writer.println(message))
     }
   }
